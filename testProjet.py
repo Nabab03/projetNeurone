@@ -39,19 +39,16 @@ bands=bands.astype('float32')
 
 
 
-#[0]
-# print(trainData[0])
-# print(testData[0])
 
-cormatrix=[]
-for i in range(0,200) :
-	cor=np.corrcoef(bands[:,:,i])
-	# print(cor)
-	# print(cor.shape)
-	cormatrix=np.append(cormatrix,cor)
+#flatten array -> List (coorcoef ne marche qu'avec des listes)
+samples = [np.array(bands[:,:,i]).flatten() for i in range(bands.shape[-1])]
 
+#
+corMat=np.corrcoef(samples)
 
-print(cormatrix.shape)
+print(corMat.shape)
+print(corMat[2][25])
+print(corMat[25][2])
 # print(len(cormatrix))
 # print(len(cormatrix[0][0]))
 
@@ -73,5 +70,5 @@ print(cormatrix.shape)
 # trainData=keras.utils.to_categorical(y=trainData,num_classes=10)
 # y_test=keras.utils.to_categorical(y=y_test,num_classes=10)
 # print(np.corrcoef(bands,trainData))
-# plt.imshow(bands[:,:,0])
+# plt.imshow(corMat)
 # plt.show()
