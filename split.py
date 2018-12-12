@@ -75,18 +75,14 @@ def clusterFromBand(Y_train, Y_test, bands, cSize=3):
 	newYtest=[]
 	ytr=0
 	yte=0
-	for i in range(bord, bands.shape[0]-bord):
-		for j in range(bord, bands.shape[1]-bord):
+	for i in range(bord, bands.shape[0]-(bord+1)):
+		for j in range(bord, bands.shape[1]-(bord+1)):
 			if Y_train[i][j]!=0:
-				newCluster=[]
-				newCluster.append(bands[i-bord:i+bord, j-bord:j+bord, :])
-				trainBand.append(newCluster)
+				trainBand.append(bands[i-bord:i+bord+1, j-bord:j+bord+1, :])
 				newYtrain=np.insert(newYtrain,ytr, Y_train[i][j])
 				ytr+=1
 			if Y_test[i][j]!=0:
-				newCluster=[]
-				newCluster.append(bands[i-bord:i+bord, j-bord:j+bord, :])
-				testBand.append(newCluster)
+				testBand.append(bands[i-bord:i+bord+1, j-bord:j+bord+1, :])
 				newYtest=np.insert(newYtest,yte, Y_test[i][j])
 				yte+=1
 	return np.array(trainBand), np.array(testBand), np.array(newYtrain), np.array(newYtest)

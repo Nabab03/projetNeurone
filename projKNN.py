@@ -22,21 +22,7 @@ bands, Y_train, Y_test=loadData()
 # bands=preTreatment(bands)
 
 removeUselessLabel(Y_test,Y_train)
-X_train, X_test, Y_train, Y_test=pixelsToClusters(Y_train, Y_test, bands)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,5)
 
 
 parameters = {
