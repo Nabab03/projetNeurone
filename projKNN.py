@@ -10,7 +10,7 @@ from sklearn.datasets import load_files
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 import scipy.io as sio
-from split import splitData, loadData, addMat ,preTreatment, pixelsToClusters
+from split import splitData, loadData, clusterFromBand ,preTreatment, pixelsToClusters, removeUselessLabel
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -21,7 +21,21 @@ bands, Y_train, Y_test=loadData()
 
 # bands=preTreatment(bands)
 
+removeUselessLabel(Y_test,Y_train)
 X_train, X_test, Y_train, Y_test=pixelsToClusters(Y_train, Y_test, bands)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
