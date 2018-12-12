@@ -10,7 +10,7 @@ from sklearn.datasets import load_files
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 import scipy.io as sio
-from split import splitData, loadData, clusterFromBand ,preTreatment, pixelsToClusters, removeUselessLabel
+from split import splitData, loadData, reSplitY, clusterFromBand ,preTreatment, pixelsToClusters, removeUselessLabel
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -19,10 +19,12 @@ from scipy.sparse import csr_matrix
 
 bands, Y_train, Y_test=loadData()
 
-# bands=preTreatment(bands)
+bands=preTreatment(bands,100)
 
 removeUselessLabel(Y_test,Y_train)
+Y_train, Y_test= reSplitY(bands, Y_train, Y_test)
 X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,5)
+
 
 
 parameters = {

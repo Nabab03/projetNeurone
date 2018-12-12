@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.io as sio
 from sklearn.decomposition import PCA
-
+import random
 
 def loadData():
 	bands= sio.loadmat('Indian_pines_corrected.mat')
@@ -65,8 +65,6 @@ def pixelsToClusters(Y_train, Y_test, bands):
 	return np.array(trainBand), np.array(testBand), np.array(newYtrain), np.array(newYtest)
 
 
-
-
 def clusterFromBand(Y_train, Y_test, bands, cSize=3):
 	bord=cSize//2
 	trainBand=[]
@@ -105,17 +103,52 @@ def preTreatment(bands, n_comp=75):
 
 
 def addMat(m1,m2):
+	m3=np.copy(m1)
 	for i in range(m1.shape[0]):
 		for j in range(m1.shape[1]):
-			m1[i][j]+=m2[i][j]
-	return m1
-
-
-
-
+			m3[i][j]+=m2[i][j]
+	return m3
 
 def removeUselessLabel(Y_test,Y_train):
 	for i in range(Y_test.shape[0]):
 		for j in range(Y_test.shape[1]):
 			if Y_test[i][j] not in Y_train:
 				Y_test[i][j]=0
+
+
+
+def reSplitY(bands, Y_test, Y_train):
+	Y_total=addMat(Y_train, Y_test)
+	newYTest=np.copy(Y_test)
+	newYTrain=np.copy(Y_train)
+	total=0
+
+	for i in range(Y_total.shape[0]):
+		for j in range(Y_total.shape[1]):
+			if Y_total[i,j]!=0:
+				total+=1
+
+	toPutInTrain=total*0.80
+	for i in range(Y_total.shape[0]):
+		for j in range(Y_total.shape[1]):
+			if Y_total[i,j]!=0:
+				if random.randint(1,total+1)<toPutInTrain:
+					newYTrain[i,j]=Y_total[i,j]
+					newYTest[i,j]=0
+					toPutInTrain-=1
+					total-=1
+				else:
+					newYTest[i,j]=Y_total[i,j]
+					newYTrain[i,j]=0
+					total-=1
+
+			else:
+				newYTest[i,j]=0
+				newYTrain[i,j]=0
+
+	return newYTrain, newYTest
+
+	# print(bands.shape)
+	# print(Y_total.shape)
+	# X_train, X_test, Y_train, Y_test = train_test_split(bands, Y_total, test_size=0.33)
+	# return X_train, X_test, Y_train, Y_test
