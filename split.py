@@ -37,9 +37,6 @@ def splitData(Y_train,Y_test, bands):
 	return np.array(trainBand), np.array(testBand), np.array(newYtrain), np.array(newYtest)
 
 
-
-
-
 def getCorrelationMatrix(bands):
 	samples = [np.array(bands[:,:,i]).flatten() for i in range(bands.shape[-1])]
 	corMat=np.corrcoef(samples)
@@ -94,18 +91,11 @@ def reSplitY(bands, Y_test, Y_train, ratio):
 					newYTest[i,j]=Y_total[i,j]
 					newYTrain[i,j]=0
 					total-=1
-
 			else:
 				newYTest[i,j]=0
 				newYTrain[i,j]=0
 
 	return newYTrain, newYTest
-
-
-
-
-
-
 
 
 def reSplitZoneY(bands, Y_test, Y_train, ratio,zoneSize):
@@ -145,23 +135,32 @@ def reSplitZoneY(bands, Y_test, Y_train, ratio,zoneSize):
 	return newYTrain, newYTest
 
 
+def pixelByLabel(Y_T):
+	labs=np.unique(Y_T)
+	dico = {}
+	for i in range(labs.size):
+		dico[labs[i]]=0
+
+	for i in range(Y_T.shape[0]):
+		for j in range(Y_T.shape[1]):
+			if Y_T[i,j]!=0:
+				dico[Y_T[i,j]]+=1
+	print(dico)
+	return dico
+
 
 def splitY(bands, Y_train,Y_test, ratio):
-
 	Y_total=addMat(Y_train, Y_test)
-	newYTrain=np.zeros(Y_train.shape)
-	newYTest=np.zeros(Y_test.shape)
+	newYTrain=np.zeros(Y_train.shape, dtype=int)
+	newYTest=np.zeros(Y_test.shape, dtype=int)
 	total=labelsNumber(Y_total)
 	toPutInTrain=total*ratio
-	print("total	toputintrain")
-	print(total)
-	print(toPutInTrain)
-	assign=np.zeros(Y_total.shape)
+	assign=np.zeros(Y_total.shape, dtype=int)
+	labPix=pixelByLabel(Y_total)
 	cptTrain=0
 	cptTest=0
 	i=0
 	j=0
-	print(total)
 	for i in range(Y_total.shape[0]):
 		for j in range(Y_total.shape[1]):
 			if Y_total[i,j]==0:
@@ -169,44 +168,36 @@ def splitY(bands, Y_train,Y_test, ratio):
 			elif assign[i,j]==0:
 				label=Y_total[i,j]
 				if total>0 and random.randint(1,total+1)<toPutInTrain:
-					added,newYTrain=recursiveAddNeighbour(newYTrain, Y_total, i,j,label,0,assign)
+					added=rec(newYTrain, Y_total, i,j,label,0,assign)
 					toPutInTrain-=added
 					total-=added
 					cptTrain+=added
 				elif total>0:
-					added,newYTest=recursiveAddNeighbour(newYTest, Y_total, i,j,label,0,assign)
+					added=rec(newYTest, Y_total, i,j,label,0,assign)
 					total-=added
 					cptTest+=added
-		
-	plt.imshow(assign)
-	plt.show()
 	return newYTrain, newYTest
 
-
-def recursiveAddNeighbour(Y, Y_T,x,y,l,addAcc, assign):
-	added=addAcc
-	if Y_T[x,y]==l and assign[x,y]==0:
-		assign[x,y]=1
-		added+=1
-		Y[x,y]=Y_T[x,y]
-
-	#si case de gauche du même label
-	tmp=0
+def recLabCpt(Y, Y_T,x,y,l,addAcc, assign):
+	if assign[x,y]==1 and assign[x-1,y]==1 and assign[x+1,y]==1 and assign[x,y-1]==1 and assign[x,y+1]==1:
+		return addAcc
 	if x-1>0 and Y_T[x-1,y]==l and assign[x-1,y]==0:
-		tmp,Y=recursiveAddNeighbour(Y,Y_T,x-1,y,l,added,assign)
-		added+=tmp
-	elif x+1<Y_T.shape[0] and Y_T[x+1,y]==l and assign[x+1,y]==0:
-		tmp,Y=recursiveAddNeighbour(Y,Y_T,x+1,y,l,added,assign)
-		added+=tmp
-	elif y-1>0 and Y_T[x,y-1]==l and assign[x,y-1]==0:
-		tmp,Y=recursiveAddNeighbour(Y,Y_T,x,y-1,l,added,assign)
-		added+=tmp
-	elif y+1<Y_T.shape[1] and Y_T[x,y+1]==l and assign[x,y+1]==0:
-		tmp,Y=recursiveAddNeighbour(Y,Y_T,x,y+1,l,added,assign)
-		added+=tmp
-
-	return added,Y
-	
+		Y[x-1,y]=Y_T[x-1,y]
+		assign[x-1,y]=1
+		addAcc=1+rec(Y,Y_T,x-1,y,l,addAcc,assign)
+	if x+1<Y_T.shape[0] and Y_T[x+1,y]==l and assign[x+1,y]==0:
+		Y[x+1,y]=Y_T[x+1,y]
+		assign[x+1,y]=1
+		addAcc=1+rec(Y,Y_T,x+1,y,l,addAcc,assign)
+	if y-1>0 and Y_T[x,y-1]==l and assign[x,y-1]==0:
+		Y[x,y-1]=Y_T[x,y-1]
+		assign[x,y-1]=1
+		addAcc=1+rec(Y,Y_T,x,y-1,l,addAcc,assign)
+	if y+1<Y_T.shape[1] and Y_T[x,y+1]==l and assign[x,y+1]==0:
+		Y[x,y+1]=Y_T[x,y+1]
+		assign[x,y+1]=1
+		addAcc=1+rec(Y,Y_T,x,y+1,l,addAcc,assign)
+	return addAcc
 
 
 
@@ -214,28 +205,27 @@ def recursiveAddNeighbour(Y, Y_T,x,y,l,addAcc, assign):
 
 
 def rec(Y, Y_T,x,y,l,addAcc, assign):
-	addAcc=addAcc
 
-	#si case de gauche du même label
-
+	if assign[x,y]==1 and assign[x-1,y]==1 and assign[x+1,y]==1 and assign[x,y-1]==1 and assign[x,y+1]==1:
+		return addAcc
 	if x-1>0 and Y_T[x-1,y]==l and assign[x-1,y]==0:
 		Y[x-1,y]=Y_T[x-1,y]
 		assign[x-1,y]=1
-		addAcc+=1+recursiveAddNeighbour(Y,Y_T,x-1,y,l,addAcc,assign)
-	elif x+1<Y_T.shape[0] and Y_T[x+1,y]==l and assign[x+1,y]==0:
+		addAcc=1+rec(Y,Y_T,x-1,y,l,addAcc,assign)
+	if x+1<Y_T.shape[0] and Y_T[x+1,y]==l and assign[x+1,y]==0:
 		Y[x+1,y]=Y_T[x+1,y]
 		assign[x+1,y]=1
-		addAcc+=1+recursiveAddNeighbour(Y,Y_T,x+1,y,l,addAcc,assign)
-	elif y-1>0 and Y_T[x,y-1]==l and assign[x,y-1]==0:
+		addAcc=1+rec(Y,Y_T,x+1,y,l,addAcc,assign)
+	if y-1>0 and Y_T[x,y-1]==l and assign[x,y-1]==0:
 		Y[x,y-1]=Y_T[x,y-1]
 		assign[x,y-1]=1
-		addAcc+=1+recursiveAddNeighbour(Y,Y_T,x,y-1,l,addAcc,assign)
-	elif y+1<Y_T.shape[1] and Y_T[x,y+1]==l and assign[x,y+1]==0:
+		addAcc=1+rec(Y,Y_T,x,y-1,l,addAcc,assign)
+	if y+1<Y_T.shape[1] and Y_T[x,y+1]==l and assign[x,y+1]==0:
 		Y[x,y+1]=Y_T[x,y+1]
 		assign[x,y+1]=1
-		addAcc+=1+recursiveAddNeighbour(Y,Y_T,x,y+1,l,addAcc,assign)
+		addAcc=1+rec(Y,Y_T,x,y+1,l,addAcc,assign)
 	return addAcc
-		
+
 
 
 
