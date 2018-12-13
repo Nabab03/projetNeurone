@@ -62,6 +62,5 @@ print(clf.cv_results_.keys())
 
 print("Best parameters set :")
 best_parameters = clf.best_estimator_.get_params()
-
 for param_name in sorted(parameters.keys()):
     print("\t%s: %r" % (param_name, best_parameters[param_name]))

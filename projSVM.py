@@ -34,7 +34,13 @@ X_train = X_train.reshape((nsamples,nx*ny*nw))
 nsamples, nx, ny,nw = X_test.shape
 X_test = X_test.reshape((nsamples,nx*ny*nw))
 
-parameters = {'kernel':('poly', 'rbf'), 'C':[1, 10]}
+parameters = {
+    # 'kernel':('poly', 'rbf'), 
+    # 'C':[1, 10]
+    'kernel':('poly'),
+    'C':[1]
+    }
+
 svc = svm.SVC(gamma='scale')
 #n_jobs = nb of processor used. -1 = all available proc
 clf = GridSearchCV(svc, parameters,n_jobs=-1, cv=5)

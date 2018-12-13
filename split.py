@@ -36,7 +36,6 @@ def splitData(Y_train,Y_test, bands):
 	return np.array(trainBand), np.array(testBand), np.array(newYtrain), np.array(newYtest)
 
 
-
 def clusterFromBand(Y_train, Y_test, bands, cSize=3):
 	bord=cSize//2
 	trainBand=[]

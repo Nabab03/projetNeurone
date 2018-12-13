@@ -19,18 +19,21 @@ from scipy.sparse import csr_matrix
 
 bands, Y_train, Y_test=loadData()
 
-print(bands.min())
 bands=preTreatment(bands)
 
 #----------
-print(bands.min())
 bands+=-bands.min()
-print(bands.min())
 #----------
 
 Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.80)
 X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,5)
 
+# reshape data to fit Classifier requirements
+nsamples, nx, ny, nw = X_train.shape
+X_train = X_train.reshape((nsamples,nx*ny*nw))
+
+nsamples, nx, ny,nw = X_test.shape
+X_test = X_test.reshape((nsamples,nx*ny*nw))
 
 parameters = {
     'alpha': [1.0, 0.1],
@@ -45,3 +48,8 @@ y_predicted=clf.predict(X_test)
 print(metrics.classification_report(Y_test, y_predicted))
 cm = metrics.confusion_matrix(Y_test, y_predicted)
 print(cm)   
+
+print("Best parameters set :")
+best_parameters = clf.best_estimator_.get_params()
+for param_name in sorted(parameters.keys()):
+    print("\t%s: %r" % (param_name, best_parameters[param_name]))
