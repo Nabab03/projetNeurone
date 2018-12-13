@@ -35,34 +35,6 @@ def splitData(Y_train,Y_test, bands):
 				
 	return np.array(trainBand), np.array(testBand), np.array(newYtrain), np.array(newYtest)
 
-def pixelsToClusters(Y_train, Y_test, bands):
-	trainBand=[]
-	testBand=[]
-	newYtrain=[]
-	newYtest=[]
-	ytr=0
-	yte=0
-	for i in range(1, bands.shape[0]-1):
-		for j in range(1, bands.shape[1]-1):
-			if Y_train[i][j]!=0:
-				newCluster=[]
-				for k in range(0, bands.shape[2]):
-					newCluster.append([[bands[i-1,j-1,k], bands[i-1, j, k], bands[i-1, j+1, k]],
-						[bands[i,j-1,k], bands[i, j, k], bands[i, j+1, k]],
-						[bands[i+1,j-1,k], bands[i+1, j, k], bands[i+1, j+1, k]]])
-				trainBand.append(newCluster)
-				newYtrain=np.insert(newYtrain,ytr, Y_train[i][j])
-				ytr+=1
-			if Y_test[i][j]!=0:
-				newCluster=[]
-				for k in range(0, bands.shape[2]):
-					newCluster.append([[bands[i-1,j-1,k], bands[i-1, j, k], bands[i-1, j+1, k]],
-						[bands[i,j-1,k], bands[i, j, k], bands[i, j+1, k]],
-						[bands[i+1,j-1,k], bands[i+1, j, k], bands[i+1, j+1, k]]])
-				testBand.append(newCluster)
-				newYtest=np.insert(newYtest,yte, Y_test[i][j])
-				yte+=1
-	return np.array(trainBand), np.array(testBand), np.array(newYtrain), np.array(newYtest)
 
 
 def clusterFromBand(Y_train, Y_test, bands, cSize=3):
@@ -116,8 +88,8 @@ def removeUselessLabel(Y_test,Y_train):
 				Y_test[i][j]=0
 
 
-
-def reSplitY(bands, Y_test, Y_train):
+#prendre pix si entourage identique
+def reSplitY(bands, Y_test, Y_train, ratio):
 	Y_total=addMat(Y_train, Y_test)
 	newYTest=np.copy(Y_test)
 	newYTrain=np.copy(Y_train)
@@ -128,7 +100,7 @@ def reSplitY(bands, Y_test, Y_train):
 			if Y_total[i,j]!=0:
 				total+=1
 
-	toPutInTrain=total*0.80
+	toPutInTrain=total*ratio
 	for i in range(Y_total.shape[0]):
 		for j in range(Y_total.shape[1]):
 			if Y_total[i,j]!=0:

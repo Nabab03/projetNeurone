@@ -1,7 +1,7 @@
 import sys
 from pprint import pprint
 from time import time
-from split import splitData, loadData, clusterFromBand,preTreatment, pixelsToClusters, removeUselessLabel
+from split import splitData, loadData, clusterFromBand,preTreatment,reSplitY, removeUselessLabel
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
@@ -20,25 +20,13 @@ from scipy.sparse import csr_matrix
 bands, Y_train, Y_test=loadData()
 bands=preTreatment(bands)
 bands+=-bands.min()
-print(bands.min())
-print(bands.max())
 
-X_train, X_test, Y_train, Y_test=pixelsToClusters(Y_train, Y_test, bands)
 removeUselessLabel(Y_test,Y_train)
 
-# print(X_train.shape)
-# print(X_test.shape)
-# # print(Y_train.shape)
-# # print(Y_test.shape)
-# print(X_train.min())
-# print(X_train.max())
+Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.80)
 
+X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,5)
 
-# print(Y_train)
-
-# print(np.unique(Y_train))
-# print(np.unique(Y_test))
-# # print(X_train)
 
 
 
@@ -68,3 +56,12 @@ y_predicted=clf.predict(X_test)
 print(metrics.classification_report(Y_test, y_predicted))
 cm = metrics.confusion_matrix(Y_test, y_predicted)
 print(cm)  
+
+print(clf.cv_results_.keys())
+
+
+print("Best parameters set :")
+best_parameters = clf.best_estimator_.get_params()
+
+for param_name in sorted(parameters.keys()):
+    print("\t%s: %r" % (param_name, best_parameters[param_name]))

@@ -10,7 +10,7 @@ from sklearn.datasets import load_files
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 import scipy.io as sio
-from split import splitData, loadData, addMat,preTreatment
+from split import splitData, loadData, addMat,preTreatment,clusterFromBand, reSplitY
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -28,7 +28,8 @@ bands+=-bands.min()
 print(bands.min())
 #----------
 
-X_train, X_test, Y_train, Y_test=splitData(Y_train, Y_test, bands)
+Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.80)
+X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,5)
 
 
 parameters = {

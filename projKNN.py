@@ -13,16 +13,16 @@ import scipy.io as sio
 from split import splitData, loadData, reSplitY, clusterFromBand ,preTreatment, pixelsToClusters, removeUselessLabel
 
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 from scipy.sparse import csr_matrix
 
 bands, Y_train, Y_test=loadData()
 
 bands=preTreatment(bands,100)
+bands+=-bands.min()
 
 removeUselessLabel(Y_test,Y_train)
-Y_train, Y_test= reSplitY(bands, Y_train, Y_test)
+Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.70)
 X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,5)
 
 
