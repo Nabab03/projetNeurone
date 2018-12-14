@@ -4,6 +4,7 @@ from sklearn.decomposition import PCA
 import random
 import matplotlib.pyplot as plt 
 
+#charge les données
 def loadData():
 	bands= sio.loadmat('Indian_pines_corrected.mat')
 	bands=bands['indian_pines_corrected']
@@ -16,6 +17,7 @@ def loadData():
 	return bands, Y_train, Y_test
 
 
+#Split l'image (145,145,200) bands en 2 images trainBand et TestBand selon quels pixels sont labélisés
 def splitData(Y_train,Y_test, bands):
 	trainBand=[]
 	testBand=[]
@@ -51,7 +53,8 @@ def preTreatment(bands, n_comp=75):
 	newBands=np.reshape(newBands, (bands.shape[0], bands.shape[1],n_comp))
 	return newBands
 
-
+#renvoi l'addition des 2 matrices
+#utilisé pour respliter Y_train et Y_test
 def addMat(m1,m2):
 	m3=np.copy(m1)
 	for i in range(m1.shape[0]):
@@ -59,6 +62,7 @@ def addMat(m1,m2):
 			m3[i][j]+=m2[i][j]
 	return m3
 
+#remplace les labels n'apparaissant que dans Y_test 
 def removeUselessLabel(Y_test,Y_train):
 	for i in range(Y_test.shape[0]):
 		for j in range(Y_test.shape[1]):
@@ -66,8 +70,8 @@ def removeUselessLabel(Y_test,Y_train):
 				Y_test[i][j]=0
 
 
-#prendre pix si entourage identique
-def reSplitY(bands, Y_test, Y_train, ratio):
+#insère aléatoirement ratio% des pixels dans Y_train, le reste dans
+def reSplitY(Y_test, Y_train, ratio):
 	Y_total=addMat(Y_train, Y_test)
 	newYTest=np.copy(Y_test)
 	newYTrain=np.copy(Y_train)
@@ -82,6 +86,7 @@ def reSplitY(bands, Y_test, Y_train, ratio):
 	for i in range(Y_total.shape[0]):
 		for j in range(Y_total.shape[1]):
 			if Y_total[i,j]!=0:
+				tmp=random.randint(1, total+1)
 				if random.randint(1,total+1)<toPutInTrain:
 					newYTrain[i,j]=Y_total[i,j]
 					newYTest[i,j]=0
@@ -145,11 +150,11 @@ def pixelByLabel(Y_T):
 		for j in range(Y_T.shape[1]):
 			if Y_T[i,j]!=0:
 				dico[Y_T[i,j]]+=1
-	print(dico)
 	return dico
 
 
-def splitY(bands, Y_train,Y_test, ratio):
+#insère ratio% des blocks existants dans Y_train, le reste dans Y_test
+def splitY(Y_train,Y_test, ratio):
 	Y_total=addMat(Y_train, Y_test)
 	newYTrain=np.zeros(Y_train.shape, dtype=int)
 	newYTest=np.zeros(Y_test.shape, dtype=int)
@@ -161,8 +166,8 @@ def splitY(bands, Y_train,Y_test, ratio):
 	cptTest=0
 	i=0
 	j=0
-	for i in range(Y_total.shape[0]):
-		for j in range(Y_total.shape[1]):
+	for j in range(Y_total.shape[1]):
+		for i in range(Y_total.shape[0]):
 			if Y_total[i,j]==0:
 				assign[i,j]=1
 			elif assign[i,j]==0:
@@ -178,30 +183,34 @@ def splitY(bands, Y_train,Y_test, ratio):
 					cptTest+=added
 	return newYTrain, newYTest
 
-def recLabCpt(Y, Y_T,x,y,l,addAcc, assign):
-	if assign[x,y]==1 and assign[x-1,y]==1 and assign[x+1,y]==1 and assign[x,y-1]==1 and assign[x,y+1]==1:
-		return addAcc
-	if x-1>0 and Y_T[x-1,y]==l and assign[x-1,y]==0:
-		Y[x-1,y]=Y_T[x-1,y]
-		assign[x-1,y]=1
-		addAcc=1+rec(Y,Y_T,x-1,y,l,addAcc,assign)
-	if x+1<Y_T.shape[0] and Y_T[x+1,y]==l and assign[x+1,y]==0:
-		Y[x+1,y]=Y_T[x+1,y]
-		assign[x+1,y]=1
-		addAcc=1+rec(Y,Y_T,x+1,y,l,addAcc,assign)
-	if y-1>0 and Y_T[x,y-1]==l and assign[x,y-1]==0:
-		Y[x,y-1]=Y_T[x,y-1]
-		assign[x,y-1]=1
-		addAcc=1+rec(Y,Y_T,x,y-1,l,addAcc,assign)
-	if y+1<Y_T.shape[1] and Y_T[x,y+1]==l and assign[x,y+1]==0:
-		Y[x,y+1]=Y_T[x,y+1]
-		assign[x,y+1]=1
-		addAcc=1+rec(Y,Y_T,x,y+1,l,addAcc,assign)
-	return addAcc
+#insère ratio% de chaque label dans Y_train, le reste dans Y_test
+def splitYWeighted(Y_train,Y_test, ratio):
+	Y_total=addMat(Y_train, Y_test)
+	newYTrain=np.zeros(Y_train.shape, dtype=int)
+	newYTest=np.zeros(Y_test.shape, dtype=int)
+	labPix=pixelByLabel(Y_total)
+	print(labPix)
+	labPix=applyRatioLabels(labPix, ratio)
+	print(labPix)
 
+	for i in range(Y_total.shape[0]):
+		for j in range(Y_total.shape[1]):
+			lab=Y_total[i,j]
+			if(Y_total[i,j]!=0):
+				if labPix[lab]>0:
+					newYTrain[i,j]=lab
+					labPix[lab]=labPix[lab]-1
+				else:
+					newYTest[i,j]=lab
+			# print(labPix)
+	return newYTrain, newYTest
 
-
-
+#applique le ratio 
+def applyRatioLabels(labels, ratio):
+	for key in labels.keys():
+		labels[key]=labels[key]*ratio
+		print(labels)
+	return labels
 
 
 def rec(Y, Y_T,x,y,l,addAcc, assign):
