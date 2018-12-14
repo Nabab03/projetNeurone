@@ -19,18 +19,15 @@ from scipy.sparse import csr_matrix
 bands, Y_train, Y_test=loadData()
 
 # ------------------ PARAMS Debut----------------------#
-#params :  3/5/pixel    0.5/0.7/0.8/0.9/none    pt/none  50/100/200   none/rdPix/block/weight
+#params :  3/5/pixel    0.5/0.7/0.8/0.9/none    none/50/100   none/rdPix/block/weight
 
-if sys.argv[4]=='50':
+if sys.argv[3]=='50':
     bands=preTreatment(bands,50)
-elif sys.argv[4]=='100':
+elif sys.argv[3]=='100':
     bands=preTreatment(bands,100)
-elif sys.argv[4]=='200':
-    bands=preTreatment(bands,200)       
-
-bands+=-bands.min()
-
-
+ 
+if sys.argv[3]!='none':
+    bands+=-bands.min()
 
 ratio=0.5
 if sys.argv[2]=='0.5':
@@ -42,11 +39,11 @@ elif sys.argv[2]=='0.8':
 elif sys.argv[2]=='0.9':
     ratio=0.9
 
-if sys.argv[5]=='rdPix':
+if sys.argv[4]=='rdPix':
     Y_train, Y_test= reSplitY(Y_train, Y_test, ratio)
-if sys.argv[5]=='block':
+if sys.argv[4]=='block':
     Y_train, Y_test= splitY(Y_train, Y_test, ratio)
-if sys.argv[5]=='weight':
+if sys.argv[4]=='weight':
     Y_train, Y_test= splitYWeighted(Y_train, Y_test, ratio)
 
 removeUselessLabel(Y_test,Y_train)

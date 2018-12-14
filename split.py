@@ -159,7 +159,6 @@ def splitY(Y_train,Y_test, ratio):
 	total=labelsNumber(Y_total)
 	toPutInTrain=total*ratio
 	assign=np.zeros(Y_total.shape, dtype=int)
-	labPix=pixelByLabel(Y_total)
 	cptTrain=0
 	cptTest=0
 	i=0
@@ -209,7 +208,6 @@ def applyRatioLabels(labels, ratio):
 
 
 def rec(Y, Y_T,x,y,l,addAcc, assign):
-
 	if assign[x,y]==1 and assign[x-1,y]==1 and assign[x+1,y]==1 and assign[x,y-1]==1 and assign[x,y+1]==1:
 		return addAcc
 	if x-1>0 and Y_T[x-1,y]==l and assign[x-1,y]==0:
