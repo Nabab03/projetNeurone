@@ -10,7 +10,7 @@ from sklearn.datasets import load_files
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 import scipy.io as sio
-from split import splitData, loadData, addMat,preTreatment,clusterFromBand, reSplitY, removeUselessLabel
+from split import splitData, loadData, preTreatment,reSplitY, removeUselessLabel,splitYWeighted,splitY, patchFromBand
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -20,31 +20,45 @@ from scipy.sparse import csr_matrix
 bands, Y_train, Y_test=loadData()
 
 # ------------------ PARAMS Debut----------------------#
-#params :  3/5/pixel    0.7/0.8/0.9/none    pt/none
+#params :  3/5/pixel    0.5/0.7/0.8/0.9/none    pt/none  50/100/200   none/rdPix/block/weight
 
 if sys.argv[4]=='50':
     bands=preTreatment(bands,50)
-    bands+=-bands.min()
 elif sys.argv[4]=='100':
     bands=preTreatment(bands,100)
-    bands+=-bands.min()
 elif sys.argv[4]=='200':
     bands=preTreatment(bands,200)       
+
     bands+=-bands.min()
+
+
+ratio=0.5
+if sys.argv[2]=='0.5':
+    ratio=0.5
+if sys.argv[2]=='0.7':
+    ratio=0.7
+elif sys.argv[2]=='0.8':
+    ratio=0.8
+elif sys.argv[2]=='0.9':
+    ratio=0.9
+
+if sys.argv[5]=='rdPix':
+    Y_train, Y_test= reSplitY(Y_train, Y_test, ratio)
+if sys.argv[5]=='block':
+    Y_train, Y_test= splitY(Y_train, Y_test, ratio)
+if sys.argv[5]=='weight':
+    Y_train, Y_test= splitYWeighted(Y_train, Y_test, ratio)
+
+
 
 removeUselessLabel(Y_test,Y_train)
 
-if sys.argv[2]=='0.7':
-    Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.70)
-elif sys.argv[2]=='0.8':
-    Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.80)
-elif sys.argv[2]=='0.9':
-    Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.90)
+
 
 if sys.argv[1]=='3':
-    X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,3)
+    X_train, X_test, Y_train, Y_test=patchFromBand(Y_train, Y_test, bands,3)
 elif sys.argv[1]=='5':
-    X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,5)
+    X_train, X_test, Y_train, Y_test=patchFromBand(Y_train, Y_test, bands,5)
 elif sys.argv[1]=='pixel':
     X_train, X_test, Y_train, Y_test=splitData(Y_train, Y_test, bands)
 

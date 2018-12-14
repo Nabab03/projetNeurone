@@ -116,7 +116,6 @@ def reSplitZoneY(bands, Y_test, Y_train, ratio,zoneSize):
 				total+=1
 
 	toPutInTrain=total*ratio
-	print(toPutInTrain)
 	for i in range(Y_total.shape[0]-(rayon+1)):
 		for j in range(Y_total.shape[1]-(rayon+1)):
 			if Y_total[i,j]!=0 and j>rayon and i>rayon and total>rayon:
@@ -189,9 +188,7 @@ def splitYWeighted(Y_train,Y_test, ratio):
 	newYTrain=np.zeros(Y_train.shape, dtype=int)
 	newYTest=np.zeros(Y_test.shape, dtype=int)
 	labPix=pixelByLabel(Y_total)
-	print(labPix)
 	labPix=applyRatioLabels(labPix, ratio)
-	print(labPix)
 
 	for i in range(Y_total.shape[0]):
 		for j in range(Y_total.shape[1]):
@@ -209,7 +206,6 @@ def splitYWeighted(Y_train,Y_test, ratio):
 def applyRatioLabels(labels, ratio):
 	for key in labels.keys():
 		labels[key]=labels[key]*ratio
-		print(labels)
 	return labels
 
 
@@ -258,7 +254,7 @@ def labelsNumber(Y):
 #   i += 1
 
 
-def clusterFromBand(Y_train, Y_test, bands, cSize=3):
+def patchFromBand(Y_train, Y_test, bands, cSize=3):
 	bord=cSize//2
 	trainBand=[]
 	testBand=[]
