@@ -29,7 +29,7 @@ elif sys.argv[4]=='100':
 elif sys.argv[4]=='200':
     bands=preTreatment(bands,200)       
 
-    bands+=-bands.min()
+bands+=-bands.min()
 
 
 ratio=0.5
@@ -72,8 +72,10 @@ if sys.argv[1]!='pixel':
 # ------------------ PARAMS Fin----------------------#
 
 parameters = {
-    'alpha': [1.0, 0.1],
-    'fit_prior': [True, False]
+    # 'alpha': [1.0, 0.1],
+    # 'fit_prior': [True, False]
+    'alpha': [1.0],
+    'fit_prior': [False]
     }
 
 #n_jobs = nb of processor used. -1 = all available proc

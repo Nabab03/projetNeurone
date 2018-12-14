@@ -103,7 +103,7 @@ def reSplitY(Y_test, Y_train, ratio):
 	return newYTrain, newYTest
 
 
-def reSplitZoneY(bands, Y_test, Y_train, ratio,zoneSize):
+def reSplitZoneY( Y_test, Y_train, ratio,zoneSize):
 	Y_total=addMat(Y_train, Y_test)
 	newYTest=np.copy(Y_test)
 	newYTrain=np.copy(Y_train)
@@ -114,7 +114,6 @@ def reSplitZoneY(bands, Y_test, Y_train, ratio,zoneSize):
 		for j in range(Y_total.shape[1]):
 			if Y_total[i,j]!=0:
 				total+=1
-
 	toPutInTrain=total*ratio
 	for i in range(Y_total.shape[0]-(rayon+1)):
 		for j in range(Y_total.shape[1]-(rayon+1)):
@@ -122,13 +121,13 @@ def reSplitZoneY(bands, Y_test, Y_train, ratio,zoneSize):
 				if random.randint(1,total+1)<toPutInTrain:
 					newYTrain[i-rayon:i+rayon+1,j-rayon:j+rayon+1]=Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1]
 					newYTest[i-rayon:i+rayon+1,j-rayon:j+rayon+1]= np.zeros((zoneSize,zoneSize))
-					toPutInTrain-=Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1].shape[0] * Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1].shape[1]
-					total-=Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1].shape[0] * Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1].shape[1]
+					toPutInTrain-=len(Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1])
+					total-=len(Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1])
 					j+=(zoneSize*zoneSize)-1
 				else:
 					newYTest[i-rayon:i+rayon+1,j-rayon:j+rayon+1]=Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1]
 					newYTrain[i-rayon:i+rayon+1,j-rayon:j+rayon+1]= np.zeros((zoneSize,zoneSize))
-					total-=Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1].shape[0] * Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1].shape[1]
+					total-=len(Y_total[i-rayon:i+rayon+1,j-rayon:j+rayon+1])
 					j+=(zoneSize*zoneSize)-1
 			else:
 				newYTest[i,j]=0
@@ -232,13 +231,6 @@ def rec(Y, Y_T,x,y,l,addAcc, assign):
 	return addAcc
 
 
-
-
-
-
-
-
-
 def labelsNumber(Y):
 	total=0
 	for i in range(Y.shape[0]):
@@ -246,12 +238,6 @@ def labelsNumber(Y):
 			if Y[i,j]!=0:
 				total+=1
 	return total
-#trainBand.append(bands[i-bord:i+bord+1, j-bord:j+bord+1, :])
-
-# i = 1
-# while i < 6:
-#   print(i)
-#   i += 1
 
 
 def patchFromBand(Y_train, Y_test, bands, cSize=3):

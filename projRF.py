@@ -75,8 +75,10 @@ if sys.argv[1]!='pixel':
 # plt.show()
 
 parameters = {
-        'n_estimators':[10, 50, 100],
-        'max_depth':[10, 20, None],
+        # 'n_estimators':[10, 50, 100],
+        # 'max_depth':[10, 20, None],
+        'n_estimators':[100],
+        'max_depth':[None],
     }
 
 clf = GridSearchCV(RandomForestClassifier(), param_grid=parameters,n_jobs=-1, cv=5)
