@@ -258,11 +258,6 @@ def labelsNumber(Y):
 #   i += 1
 
 
-
-
-
-
-
 def clusterFromBand(Y_train, Y_test, bands, cSize=3):
 	bord=cSize//2
 	trainBand=[]

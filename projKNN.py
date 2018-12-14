@@ -18,20 +18,32 @@ from scipy.sparse import csr_matrix
 
 bands, Y_train, Y_test=loadData()
 
-#paras :  3/5/pixel    0.7/0.8/0.9/none    pt/none     
+# ------------------ PARAMS Debut----------------------#
+#params :  3/5/pixel    0.7/0.8/0.9/none    pt/none
 
-if sys.argv[3]=='pt':
+if sys.argv[4]=='50':
+    bands=preTreatment(bands,50)
+    bands+=-bands.min()
+elif sys.argv[4]=='100':
     bands=preTreatment(bands,100)
     bands+=-bands.min()
+elif sys.argv[4]=='200':
+    bands=preTreatment(bands,200)       
+    bands+=-bands.min()
+
+# micro 0.90 de prec  / macro 0.97
+
+if sys.argv[2]=='0.7':
+    Y_train, Y_test= reSplitY(Y_train, Y_test, 0.70)
+elif sys.argv[2]=='0.8':
+    Y_train, Y_test= reSplitY(Y_train, Y_test, 0.80)
+elif sys.argv[2]=='0.9':
+    Y_train, Y_test= reSplitY(Y_train, Y_test, 0.90)
+
+
 
 removeUselessLabel(Y_test,Y_train)
 
-if sys.argv[2]=='0.7':
-    Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.70)
-elif sys.argv[2]=='0.8':
-    Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.80)
-elif sys.argv[2]=='0.9':
-    Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.90)
 
 
 if sys.argv[1]=='3':
@@ -41,14 +53,6 @@ elif sys.argv[1]=='5':
 elif sys.argv[1]=='pixel':
     X_train, X_test, Y_train, Y_test=splitData(Y_train, Y_test, bands)
 
-
-parameters = {
-    'n_neighbors': [1],
-        # 'n_neighbors': [1, 5, 10],
-    'weights': ['uniform']
-    #     'weights': ['uniform', 'distance']
-    }
-
 if sys.argv[1]!='pixel':
     #reshape data to fit Classifier requirements
     nsamples, nx, ny, nw = X_train.shape
@@ -56,6 +60,14 @@ if sys.argv[1]!='pixel':
     nsamples, nx, ny,nw = X_test.shape
     X_test = X_test.reshape((nsamples,nx*ny*nw))
 
+# ------------------ PARAMS Fin----------------------#
+
+parameters = {
+    'n_neighbors': [1],
+        # 'n_neighbors': [1, 5, 10],
+    'weights': ['uniform']
+    #     'weights': ['uniform', 'distance']
+    }
 
 # svc = svm.SVC(gamma='scale')
 #n_jobs = nb of processor used. -1 = all available proc

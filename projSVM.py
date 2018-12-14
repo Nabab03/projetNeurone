@@ -18,21 +18,44 @@ import numpy as np
 from scipy.sparse import csr_matrix
 
 bands, Y_train, Y_test=loadData()
-bands=preTreatment(bands)
-bands+=-bands.min()
+
+# ------------------ PARAMS Debut----------------------#
+#params :  3/5/pixel    0.7/0.8/0.9/none    pt/none
+
+if sys.argv[4]=='50':
+    bands=preTreatment(bands,50)
+    bands+=-bands.min()
+elif sys.argv[4]=='100':
+    bands=preTreatment(bands,100)
+    bands+=-bands.min()
+elif sys.argv[4]=='200':
+    bands=preTreatment(bands,200)       
+    bands+=-bands.min()
 
 removeUselessLabel(Y_test,Y_train)
-Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.80)
 
-X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,5)
+if sys.argv[2]=='0.7':
+    Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.70)
+elif sys.argv[2]=='0.8':
+    Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.80)
+elif sys.argv[2]=='0.9':
+    Y_train, Y_test= reSplitY(bands, Y_train, Y_test, 0.90)
 
+if sys.argv[1]=='3':
+    X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,3)
+elif sys.argv[1]=='5':
+    X_train, X_test, Y_train, Y_test=clusterFromBand(Y_train, Y_test, bands,5)
+elif sys.argv[1]=='pixel':
+    X_train, X_test, Y_train, Y_test=splitData(Y_train, Y_test, bands)
 
-#reshape data to fit Classifier requirements
-nsamples, nx, ny, nw = X_train.shape
-X_train = X_train.reshape((nsamples,nx*ny*nw))
+if sys.argv[1]!='pixel':
+    #reshape data to fit Classifier requirements
+    nsamples, nx, ny, nw = X_train.shape
+    X_train = X_train.reshape((nsamples,nx*ny*nw))
+    nsamples, nx, ny,nw = X_test.shape
+    X_test = X_test.reshape((nsamples,nx*ny*nw))
 
-nsamples, nx, ny,nw = X_test.shape
-X_test = X_test.reshape((nsamples,nx*ny*nw))
+# ------------------ PARAMS Fin----------------------#
 
 parameters = {
     # 'kernel':('poly', 'rbf'), 
