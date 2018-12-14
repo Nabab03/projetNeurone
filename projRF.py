@@ -19,7 +19,7 @@ from scipy.sparse import csr_matrix
 bands, Y_train, Y_test=loadData()
 
 # ------------------ PARAMS Debut----------------------#
-#params :  3/5/pixel    0.5/0.7/0.8/0.9/none   none/50/100   none/rdPix/block/weight
+#params :  3/5/pixel    0.5/0.7/0.8/0.9   none/50/100   none/rdPix/block/weight
 
 if sys.argv[3]=='50':
     bands=preTreatment(bands,50)
@@ -47,6 +47,7 @@ if sys.argv[4]=='weight':
     Y_train, Y_test= splitYWeighted(Y_train, Y_test, ratio)
 
 removeUselessLabel(Y_test,Y_train)
+
 
 if sys.argv[1]=='3':
     X_train, X_test, Y_train, Y_test=patchFromBand(Y_train, Y_test, bands,3)
