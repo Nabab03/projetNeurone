@@ -12,7 +12,6 @@ from sklearn.model_selection import train_test_split
 from sklearn import metrics
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 from scipy.sparse import csr_matrix
 
@@ -31,7 +30,7 @@ if sys.argv[3]!='none':
 
 ratio=0.5
 if sys.argv[2]=='0.5':
-    ratio=0.5
+    ratio=0.57
 if sys.argv[2]=='0.7':
     ratio=0.7
 elif sys.argv[2]=='0.8':

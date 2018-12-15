@@ -13,7 +13,6 @@ import scipy.io as sio
 from libIP import splitData, loadData, preTreatment,reSplitY, removeUselessLabel,splitYWeighted,splitY,patchFromBand
 
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 from scipy.sparse import csr_matrix
 
