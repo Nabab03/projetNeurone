@@ -13,14 +13,19 @@ p3 = ['none', 'pt']
 p4 = ['50', '100', '200']
 p5 = ['none', 'rdPix', 'block', 'weight']
 
-RESNB=RES+'NB.txt'
+RESNB=RES+'test.txt'
 
-os.system('Voici le script de NB >'+RESNB)
+os.system('echo NB >'+RESNB)
 
-for i in range(len(p1)) :
-    for j in range(len(p2)) :
-        for k in range(len(p3)) :
-            for l in range(len(p4)) :
-                for m in range(len(p5)) :
-                    com='python projNB.py '+p1[i]+' '+p2[j]+' '+p3[k]+' '+p4[l]+' '+p5[m]+'>>'
-                    os.system(com+RESNB)
+com='python projNB.py 3 0.5 pt 100 rdPix>>'
+os.system(com+RESNB)
+
+
+
+# for i in range(len(p1)) :
+#     for j in range(len(p2)) :
+#         for k in range(len(p3)) :
+#             for l in range(len(p4)) :
+#                 for m in range(len(p5)) :
+#                     com='python projNB.py '+p1[i]+' '+p2[j]+' '+p3[k]+' '+p4[l]+' '+p5[m]+'>>'
+                    # os.system(com+RESNB)

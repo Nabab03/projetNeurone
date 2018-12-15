@@ -10,7 +10,7 @@ from sklearn.datasets import load_files
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 import scipy.io as sio
-from split import splitData, loadData, preTreatment,reSplitY, removeUselessLabel,splitYWeighted,splitY,patchFromBand
+from libIP import splitData, loadData, preTreatment,reSplitY, removeUselessLabel,splitYWeighted,splitY,patchFromBand
 
 import matplotlib.pyplot as plt
 import seaborn as sns

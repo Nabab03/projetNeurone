@@ -1,7 +1,7 @@
 import sys
 from pprint import pprint
 from time import time
-from split import splitData, loadData, preTreatment,reSplitY, removeUselessLabel,splitYWeighted,splitY,patchFromBand
+from libIP import splitData, loadData, preTreatment,reSplitY, removeUselessLabel,splitYWeighted,splitY,patchFromBand
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
