@@ -5,7 +5,7 @@ Projet de classification d'occupation des sols
 ## Dossiers et Fichiers:
 
 **Dossier datas :**
-Les données sont contenus dans `datas/`
+Les données sont contenues dans `datas/`
 <ul>
 <li>Indian_pines_corrected.mat</li>
 Contient l'image à traiter (145x145x200)
@@ -33,7 +33,7 @@ Nous avons mis en place 4 classifieurs :
 - *scriptRF.py* : Teste l'impact de chaque paramètre par rapport au jeu de paramètres optimal.
 
 **Librairie :**
-Le fichier libIP.py est une librairie contenant un certain nombre de fonction nécessaires à tous les classifieurs
+Le fichier libIP.py est une librairie contenant un certain nombre de fonctions nécessaires à tous les classifieurs
 ##Paramètres :
 Chacun des classifieurs nécessite 4 paramètres :
 Dans l'ordre :
@@ -43,7 +43,7 @@ Dans l'ordre :
     pca : none/50/100  
     splitFonction : none/rdPix/block/weight
 
-Le paramètre **patch** détermine quel format de données l'on envoi au classifieur pour chaque pixel.
+Le paramètre **patch** détermine quel format de données l'on envoie au classifieur pour chaque pixel.
 &nbsp;&nbsp;&nbsp;3 = fenêtre de 3x3 des voisins d'un pixel sur toutes les couches et son label associé. (3,3,200)
 &nbsp;&nbsp;&nbsp;5 = fenêtre de 5x5 des voisins d'un pixel sur toutes les couches et son label associé. (5,5,200)
 &nbsp;&nbsp;&nbsp; pixel= pixel seul et son label associé (200).
@@ -73,7 +73,7 @@ Il est nécessaire de faire un certain nombre d'installations avant de pouvoir e
     pip install numpy matplotlib scikit-learn tensorflow geopandas
 
 ## Utilisation :
-Avant exécution il est nécessaire de lancer la machine virtuelle python3
+Avant exécution, il est nécessaire de lancer la machine virtuelle python3
 
     cd tp_eca_2018
     source bin/activate
