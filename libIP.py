@@ -71,17 +71,15 @@ def removeUselessLabel(Y_test,Y_train):
 
 
 #insère aléatoirement ratio% des pixels dans Y_train, le reste dans
-def reSplitY(Y_test, Y_train, ratio):
+def splitPixel(Y_test, Y_train, ratio):
 	Y_total=addMat(Y_train, Y_test)
 	newYTest=np.copy(Y_test)
 	newYTrain=np.copy(Y_train)
 	total=0
-
 	for i in range(Y_total.shape[0]):
 		for j in range(Y_total.shape[1]):
 			if Y_total[i,j]!=0:
 				total+=1
-
 	toPutInTrain=total*ratio
 	for i in range(Y_total.shape[0]):
 		for j in range(Y_total.shape[1]):
@@ -99,7 +97,6 @@ def reSplitY(Y_test, Y_train, ratio):
 			else:
 				newYTest[i,j]=0
 				newYTrain[i,j]=0
-
 	return newYTrain, newYTest
 
 
@@ -152,7 +149,7 @@ def pixelByLabel(Y_T):
 
 
 #insère ratio% des blocks existants dans Y_train, le reste dans Y_test
-def splitY(Y_train,Y_test, ratio):
+def splitBlock(Y_train,Y_test, ratio):
 	Y_total=addMat(Y_train, Y_test)
 	newYTrain=np.zeros(Y_train.shape, dtype=int)
 	newYTest=np.zeros(Y_test.shape, dtype=int)
