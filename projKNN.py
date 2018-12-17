@@ -10,7 +10,7 @@ from sklearn.datasets import load_files
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 import scipy.io as sio
-from libIP import splitData, loadData, preTreatment,reSplitY, removeUselessLabel,splitYWeighted,splitY,patchFromBand
+from libIP import splitData, loadData, preTreatment,splitPixel, removeUselessLabel,splitYWeighted,splitBlock,patchFromBand
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -40,9 +40,9 @@ elif sys.argv[2]=='0.9':
 
 removeUselessLabel(Y_test,Y_train)
 if sys.argv[4]=='rdPix':
-    Y_train, Y_test= reSplitY(Y_train, Y_test, ratio)
+    Y_train, Y_test= splitPixel(Y_train, Y_test, ratio)
 if sys.argv[4]=='block':
-    Y_train, Y_test= splitY(Y_train, Y_test, ratio)
+    Y_train, Y_test= splitBlock(Y_train, Y_test, ratio)
 if sys.argv[4]=='weight':
     Y_train, Y_test= splitYWeighted(Y_train, Y_test, ratio)
 
