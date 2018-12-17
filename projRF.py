@@ -79,12 +79,12 @@ parameters = {
     }
 
 clf = GridSearchCV(RandomForestClassifier(), param_grid=parameters,n_jobs=-1, cv=5)
-clf.fit(X_train, Y_train)  
+clf.fit(X_train, Y_train)
 y_predicted=clf.predict(X_test)
 
 print(metrics.classification_report(Y_test, y_predicted))
 cm = metrics.confusion_matrix(Y_test, y_predicted)
-print(cm)  
+print(cm)
 
 print(clf.cv_results_.keys())
 
@@ -92,3 +92,12 @@ print("Best parameters set :")
 best_parameters = clf.best_estimator_.get_params()
 for param_name in sorted(parameters.keys()):
     print("\t%s: %r" % (param_name, best_parameters[param_name]))
+print(Y_test.shape)
+print(y_predicted.shape)
+
+# # nsamples, p = y_predicted.shape
+# y_predicted = y_predicted.reshape(145*145)
+# print(y_predicted.shape)
+
+# plt.imshow(y_predicted)
+# plt.show()

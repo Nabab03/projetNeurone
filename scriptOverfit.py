@@ -3,10 +3,10 @@ import os
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 RES = ROOT_DIR + "/res/"
 
-p2 = ['0.5','0.8', ]
-p4 = ['none', 'rdPix', 'block', 'weight']
+p2 = ['0.7','0.9', ]
+p4 = ['rdPix', 'block', 'weight']
 
-RESRF=RES+'RF.txt'
+RESRF=RES+'OF2.txt'
 
 os.system(' echo RANDOM FOREST >'+RESRF)
 #pixSize=5 ratioTest=0.8 Pretraitement band=100 weight
