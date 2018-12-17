@@ -39,13 +39,13 @@ elif sys.argv[2]=='0.8':
 elif sys.argv[2]=='0.9':
     ratio=0.9
 
+removeUselessLabel(Y_test,Y_train)
 if sys.argv[4]=='rdPix':
     Y_train, Y_test= reSplitY(Y_train, Y_test, ratio)
 if sys.argv[4]=='block':
     Y_train, Y_test= splitY(Y_train, Y_test, ratio)
 if sys.argv[4]=='weight':
     Y_train, Y_test= splitYWeighted(Y_train, Y_test, ratio)
-removeUselessLabel(Y_test,Y_train)
 
 
 

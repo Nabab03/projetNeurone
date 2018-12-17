@@ -5,14 +5,14 @@ print(ROOT_DIR)
 RES = ROOT_DIR + "/res/"
 print(RES)
 
-print("RF")
+print("RF9")
 
 p1 = ['3', '5', 'pixel']
 p2 = ['none', '0.5', '0.7', '0.8', '0.9']
 p3 = ['50', '100', 'none']
 p4 = ['none', 'rdPix', 'block', 'weight']
 
-RESRF=RES+'RF.txt'
+RESRF=RES+'RF9.txt'
 
 os.system(' echo RANDOM FOREST >'+RESRF)
 #pixSize=5 ratioTest=0.8 Pretraitement band=100 weight

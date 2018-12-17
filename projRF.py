@@ -1,7 +1,7 @@
 import sys
 from pprint import pprint
 from time import time
-from libIP import splitData, loadData, preTreatment,reSplitY, removeUselessLabel,splitYWeighted,splitY,patchFromBand
+from libIP import splitData, loadData,pixelByLabel, preTreatment,reSplitY, removeUselessLabel,splitYWeighted,splitY,patchFromBand
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
@@ -38,6 +38,8 @@ elif sys.argv[2]=='0.8':
 elif sys.argv[2]=='0.9':
     ratio=0.9
 
+removeUselessLabel(Y_test,Y_train)
+
 if sys.argv[4]=='rdPix':
     Y_train, Y_test= reSplitY(Y_train, Y_test, ratio)
 if sys.argv[4]=='block':
@@ -45,8 +47,10 @@ if sys.argv[4]=='block':
 if sys.argv[4]=='weight':
     Y_train, Y_test= splitYWeighted(Y_train, Y_test, ratio)
 
-removeUselessLabel(Y_test,Y_train)
-
+print('pixel train')
+print(pixelByLabel(Y_train))
+print('pixel test')
+print(pixelByLabel(Y_test))
 
 if sys.argv[1]=='3':
     X_train, X_test, Y_train, Y_test=patchFromBand(Y_train, Y_test, bands,3)
