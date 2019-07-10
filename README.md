@@ -67,13 +67,13 @@ Le paramètre **splitFonction** détermine la fonction de resplit des Labels uti
 &nbsp;&nbsp;&nbsp;weight = on insère splitProp% de chaque label dans Y_train, le reste dans Y_test
 
 ## Installation :
-Il est nécessaire de faire un certain nombre d'installations avant de pouvoir exécuter les programmes.
+Un certain nombre d'installations sont nécessaires avant de pouvoir exécuter les programmes.
         
     virtualenv tp_eca_2018 -p python3
     pip install numpy matplotlib scikit-learn tensorflow geopandas
 
 ## Utilisation :
-Avant exécution, il est nécessaire de lancer la machine virtuelle python3
+Avant exécution, lancez la machine virtuelle python3
 
     cd tp_eca_2018
     source bin/activate
